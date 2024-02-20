@@ -34,7 +34,7 @@ public class AuthController {
         if (validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         }
-        return this.employeeService.save(employee);
+        return this.authService.save(employee);
     }
 
 }

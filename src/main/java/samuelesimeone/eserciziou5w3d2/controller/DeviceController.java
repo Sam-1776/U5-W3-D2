@@ -4,6 +4,7 @@ package samuelesimeone.eserciziou5w3d2.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,7 @@ public class DeviceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Device save(@RequestBody @Validated DeviceDTO device, BindingResult validation){
         if (validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
@@ -43,11 +45,13 @@ public class DeviceController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Device update(@PathVariable UUID id, @RequestBody DeviceDTO deviceUp){
         return this.deviceService.update(id, deviceUp);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id){
         this.deviceService.delete(id);

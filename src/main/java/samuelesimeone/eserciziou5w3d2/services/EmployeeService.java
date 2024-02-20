@@ -36,15 +36,6 @@ public class EmployeeService {
         return employeeDAO.findAll(pageable);
     }
 
-    public Employee save(EmployeeDTO employee){
-        employeeDAO.findByEmail(employee.email()).ifPresent(element -> {
-            throw new BadRequestException("Email inserita già in uso riprovare");
-        });
-        String avatar = "https://ui-avatars.com/api/?name=" + employee.name() + "+" + employee.surname();
-        Employee newEmployee = new Employee(employee.username(), employee.name(), employee.surname(), employee.email(), employee.password(), avatar);
-        return employeeDAO.save(newEmployee);
-    }
-
     public Employee findById(UUID id){
         return employeeDAO.findById(id).orElseThrow(() -> new NotFoundException(id));
     }

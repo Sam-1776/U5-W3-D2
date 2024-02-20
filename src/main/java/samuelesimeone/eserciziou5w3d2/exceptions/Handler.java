@@ -3,6 +3,7 @@ package samuelesimeone.eserciziou5w3d2.exceptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,9 +29,16 @@ public class Handler {
     @ExceptionHandler(UnauthorizedException.class)
     // Con questa annotazione indico che questo metodo gestirà le eccezioni di tipo UnauthorizedException
     @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
-    public ErrorsPayload handleUnauthorized(UnauthorizedException ex) {
+    public ErrorsPayload handle401(UnauthorizedException ex) {
         return new ErrorsPayload(ex.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorsPayload handle403(AccessDeniedException ex){
+        return new ErrorsPayload("Non hai i diritti per l'accesso a questo indirizzo" ,LocalDateTime.now());
+    }
+
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

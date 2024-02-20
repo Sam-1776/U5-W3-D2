@@ -1,12 +1,15 @@
 package samuelesimeone.eserciziou5w3d2.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -18,6 +21,16 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({
+        "password",
+        "role",
+        "enabled",
+        "authorities",
+        "username",
+        "accountNonLocked",
+        "accountNonExpired",
+        "credentialsNonExpired"
+})
 public class Employee implements UserDetails {
     @Id
     @GeneratedValue
@@ -30,6 +43,7 @@ public class Employee implements UserDetails {
     private String password;
     private String profilePic;
     @OneToMany(mappedBy = "employee")
+    @JsonIgnore
     private List<Device> devices;
     private Role role;
 
@@ -58,7 +72,12 @@ public class Employee implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
     }
 
     @Override

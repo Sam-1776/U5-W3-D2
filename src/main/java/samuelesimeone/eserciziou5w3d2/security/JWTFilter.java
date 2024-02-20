@@ -44,7 +44,8 @@ public class JWTFilter extends OncePerRequestFilter {
         // EVITANDO COSI ERRORI DI TIPO 403
         String id = jwTools.takeIdEmployeeFormToken(token);
         Employee user = employeeService.findById(UUID.fromString(id));
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null);
+        // CON IL TERZO PARAMETRO PASSIAMO IL/I RUOLO/I DELL'UTENTE
+        Authentication auth = new UsernamePasswordAuthenticationToken(user, null,user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
         // MANDA AVANTI LA CATENA DEI FILTRI
         filterChain.doFilter(request, response);
